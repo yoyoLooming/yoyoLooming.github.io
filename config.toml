@@ -5,6 +5,9 @@ theme = "diary"
 DefaultContentLanguage = "en" # Theme's display language, supports: en, fr, zh, zh-hant
 copyright = "This is a customized copyright."
 
+[author]
+    name = "yoyoLooming"
+    email = "yoyolooming@gmail.com"
 
 # Generate sitemap in the public folder
 [sitemap]
