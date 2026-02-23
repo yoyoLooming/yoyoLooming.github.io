@@ -1,9 +1,10 @@
-baseURL = "http://example.org/"
-DefaultContentLanguage = "en" # Theme's display language, supports: en, fr, zh, zh-hant
-languageCode = "en-us"
-title = "A Hugo Site"
-copyright = "This is a customized copyright."
+baseURL = 'https://yoyolooming.github.io/'
+languageCode = 'zh-cn'
+title = 'yoyolog'
 theme = "diary"
+DefaultContentLanguage = "en" # Theme's display language, supports: en, fr, zh, zh-hant
+copyright = "This is a customized copyright."
+
 
 # Generate sitemap in the public folder
 [sitemap]
