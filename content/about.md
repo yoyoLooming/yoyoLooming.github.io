@@ -1,7 +1,7 @@
 +++
 date = '2026-02-23T10:42:14+08:00'
 draft = true
-title = 'About'
+title = '关于我'
 +++
 
 # yoyo_looming
