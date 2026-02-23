@@ -2,7 +2,7 @@ name: Deploy Hugo site to Pages
 
 on:
   push:
-    branches: ["main"] # 如果你的主分支叫 master，请改为 master
+    branches: ["main"]
 
 permissions:
   contents: read
@@ -16,9 +16,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          submodules: recursive # 这行很重要，保证主题文件夹不是空的
       - name: Setup Hugo
-        uses: actions/setup-hugo@v3
+        uses: peaceiris/actions-hugo@v3 # 换成这个更常用的版本
         with:
           hugo-version: 'latest'
           extended: true
