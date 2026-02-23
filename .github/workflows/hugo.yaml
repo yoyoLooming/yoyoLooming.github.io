@@ -20,7 +20,7 @@ jobs:
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3 # 换成这个更常用的版本
         with:
-          hugo-version: 'latest'
+          hugo-version: '0.123.0'
           extended: true
       - name: Build
         run: hugo --minify
