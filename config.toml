@@ -28,17 +28,17 @@ showReadingTime = true
 
 # Please visit https://giscus.app/ to generate settings.
 [params.giscus]
-    data_repo="username/repo"
-    data_repo_id="**************************"    
+    data_repo="yoyoLooming/yoyoLooming.github.io"
+    data_repo_id="R_kgDOHxoWug"
     data_category="General"
-    data_category_id="*********************"
+    data_category_id="DIC_kwDOHxoWus4DK8Ur"
     data_mapping="pathname"
     data_strict="0"
     data_reactions_enabled="1"
     data_emit_metadata="0"
     data_input_position="bottom"
     data_theme="preferred_color_scheme"
-    data_lang="en"
+    data_lang="zh-CN"
     crossorigin="anonymous"
 
 
