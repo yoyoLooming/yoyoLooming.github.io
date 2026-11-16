@@ -55,8 +55,8 @@ url = "/tags"
 name = "Tags"
 weight = 3
 [[menu.main]]
-url = "/index.xml"
-name = "RSS Feed"
+url = "/moments"
+name = "碎碎念"
 weight = 4
 [[menu.main]]
 url = "/about"
