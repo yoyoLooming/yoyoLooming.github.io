@@ -1,0 +1,24 @@
+{{- /*
+  交互式动画嵌入（shortcode）
+
+  用法：
+    {{< anim name="spring-particles" height="460" >}}
+
+  对应文件（自包含，可单独打开分享）：
+    static/anim/spring-particles/index.html
+*/ -}}
+{{- $name := .Get "name" -}}
+{{- $height := .Get "height" | default "440" -}}
+{{- if not $name -}}
+  {{- errorf "shortcode anim 缺少 name 参数（%s）" .Page.File.Path -}}
+{{- end -}}
+{{- $src := printf "/anim/%s/" $name | relURL -}}
+<div class="anim-frame" style="position:relative;width:100%;height:{{ $height }}px;margin:1.6rem 0;">
+  <iframe
+    src="{{ $src }}"
+    title="交互式动画：{{ $name }}"
+    loading="lazy"
+    scrolling="no"
+    style="position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:8px;background:#faf9f5;"
+  ></iframe>
+</div>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>弹簧粒子</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #faf9f5; }
+  canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: crosshair; }
+  .hint {
+    position: fixed; left: 0; right: 0; bottom: 8px; text-align: center;
+    font: 12px/1.6 -apple-system, "Segoe UI", "PingFang SC", sans-serif;
+    color: #9a9a93; pointer-events: none; user-select: none;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="hint">移动鼠标推开粒子 · 点击炸开 · 松手后自动回位</div>
+
+<script>
+(function () {
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const GAP = 44;          // 粒子间距
+  const R = 110;           // 鼠标影响半径
+  const SPRING = 0.045;    // 回位弹力
+  const FRICTION = 0.90;   // 阻尼
+  const COLOR = '43, 43, 40';
+
+  let dpr = 1, W = 0, H = 0;
+  let particles = [];
+  const mouse = { x: -9999, y: -9999, down: false };
+
+  function build() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = canvas.clientWidth;
+    H = canvas.clientHeight;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    particles = [];
+    const cols = Math.floor(W / GAP);
+    const rows = Math.floor(H / GAP);
+    const ox = (W - (cols - 1) * GAP) / 2;
+    const oy = (H - (rows - 1) * GAP) / 2;
+
+    for (let j = 0; j < rows; j++) {
+      for (let i = 0; i < cols; i++) {
+        const hx = ox + i * GAP;
+        const hy = oy + j * GAP;
+        particles.push({ x: hx, y: hy, hx, hy, vx: 0, vy: 0 });
+      }
+    }
+  }
+
+  function step() {
+    ctx.clearRect(0, 0, W, H);
+
+    for (const p of particles) {
+      // 鼠标推力
+      const dx = p.x - mouse.x;
+      const dy = p.y - mouse.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < R && dist > 0.001) {
+        const force = (1 - dist / R) * (mouse.down ? 26 : 10);
+        p.vx += (dx / dist) * force;
+        p.vy += (dy / dist) * force;
+      }
+
+      // 弹回原位
+      p.vx += (p.hx - p.x) * SPRING;
+      p.vy += (p.hy - p.y) * SPRING;
+      p.vx *= FRICTION;
+      p.vy *= FRICTION;
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // 位移越大，点越大越实
+      const off = Math.min(Math.hypot(p.x - p.hx, p.y - p.hy) / 60, 1);
+      const radius = 1.1 + off * 2.6;
+      const alpha = 0.18 + off * 0.68;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + COLOR + ',' + alpha.toFixed(3) + ')';
+      ctx.fill();
+    }
+  }
+
+  function loop() {
+    step();
+    requestAnimationFrame(loop);
+  }
+
+  function toLocal(ev) {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = ev.clientX - rect.left;
+    mouse.y = ev.clientY - rect.top;
+  }
+
+  canvas.addEventListener('pointermove', toLocal);
+  canvas.addEventListener('pointerdown', function (ev) { mouse.down = true; toLocal(ev); });
+  window.addEventListener('pointerup', function () { mouse.down = false; });
+  canvas.addEventListener('pointerleave', function () { mouse.x = -9999; mouse.y = -9999; });
+
+  let resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(build, 120);
+  });
+
+  build();
+
+  if (reduceMotion) {
+    step();                     // 只画一帧静态图
+  } else {
+    requestAnimationFrame(loop);
+  }
+})();
+</script>
+</body>
+</html>
